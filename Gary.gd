@@ -8,8 +8,9 @@ var velocity = Vector3()
 var direction = Vector3()
 
 # Fly variables
-const FLY_SPEED = 40
+const FLY_SPEED = 18
 const FLY_ACCEL = 4
+var flying = false
 
 # Walk variables
 var gravity = -9.8 * 3
@@ -27,7 +28,10 @@ func _ready():
 
 func _physics_process(delta):
 	aim()
-	walk(delta)
+	if flying:
+		fly(delta)
+	else:
+		walk(delta)
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -117,3 +121,12 @@ func aim():
 			$Head/Camera.rotate_x(deg2rad(change))
 			camera_angle += change
 		camera_change = Vector2()
+
+func _on_Area_body_entered(body):
+	if body.name == "Gary":
+		flying = true
+
+
+func _on_Area_body_exited(body):
+	if body.name == "Gary":
+		flying = false
