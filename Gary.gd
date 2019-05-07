@@ -21,6 +21,8 @@ const DEACCEL = 6
 
 # Jumping
 var jump_height = 15
+var in_air = 0
+var has_contact = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -54,6 +56,15 @@ func walk(delta):
 
 	direction = direction.normalized()
 
+	if (is_on_floor()):
+		has_contact = true
+	else:
+		if !$Tail.is_colliding():
+			has_contact = false
+
+	if (has_contact and !is_on_floor()):
+		move_and_collide(Vector3(0, -1, 0))
+
 	velocity.y += gravity * delta
 
 	var temp_velocity = velocity
@@ -80,11 +91,16 @@ func walk(delta):
 	velocity.x = temp_velocity.x
 	velocity.z = temp_velocity.z
 
+	if has_contact and Input.is_action_just_pressed("jump"):
+		velocity.y = jump_height
+		has_contact = false
+
 	# move
 	velocity = move_and_slide(velocity, Vector3(0, 1, 0))
 
-	if is_on_floor() and Input.is_action_just_pressed("jump"):
-		velocity.y = jump_height
+	if !is_on_floor():
+		print(in_air)
+		in_air += 1
 
 func fly(delta):
 	# Set the direction of the player
@@ -125,7 +141,6 @@ func aim():
 func _on_Area_body_entered(body):
 	if body.name == "Gary":
 		flying = true
-
 
 func _on_Area_body_exited(body):
 	if body.name == "Gary":
