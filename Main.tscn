@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Main.gd" type="Script" id=1]
 [ext_resource path="res://stairs_up.obj" type="ArrayMesh" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://noon_grass_2k.hdr" type="Texture" id=8]
 [ext_resource path="res://Light.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Gary.gd" type="Script" id=10]
+[ext_resource path="res://handgun.obj" type="ArrayMesh" id=11]
+[ext_resource path="res://dot.png" type="Texture" id=12]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 0.300781, 0.298431, 0.298431, 1 )
@@ -220,6 +222,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
 [node name="Camera" type="Camera" parent="Gary/Head"]
 far = 200.0
 
+[node name="Gun" type="MeshInstance" parent="Gary/Head/Camera"]
+transform = Transform( 0, 0, 1, 0, 1, 0, -1, 0, 0, 0.259, -0.562, -0.379 )
+mesh = ExtResource( 11 )
+material/0 = null
+
 [node name="Tail" type="RayCast" parent="Gary"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.19238, 0 )
 enabled = true
@@ -228,5 +235,15 @@ enabled = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.940519, -0.702248 )
 enabled = true
 cast_to = Vector3( 0, -0.4, 0 )
+
+[node name="Control" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="Sprite" type="Sprite" parent="Control"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 12 )
 [connection signal="body_entered" from="Ladder/Area" to="Gary" method="_on_Area_body_entered"]
 [connection signal="body_exited" from="Ladder/Area" to="Gary" method="_on_Area_body_exited"]
