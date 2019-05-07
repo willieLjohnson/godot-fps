@@ -2,6 +2,7 @@ extends KinematicBody
 
 var camera_angle = 0
 var mouse_sensitivity = 0.3
+var camera_change = Vector2()
 
 var velocity = Vector3()
 var direction = Vector3()
@@ -25,16 +26,12 @@ func _ready():
 	pass # Replace with function body.
 
 func _physics_process(delta):
+	aim()
 	walk(delta)
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		$Head.rotate_y(deg2rad(-event.relative.x * mouse_sensitivity))
-		
-		var change = -event.relative.y * mouse_sensitivity
-		if change + camera_angle < 90 and change + camera_angle > -90:
-			$Head/Camera.rotate_x(deg2rad(change))
-			camera_angle += change
+		camera_change = event.relative
 
 func walk(delta):
 	# Set the direction of the player
@@ -82,7 +79,7 @@ func walk(delta):
 	# move
 	velocity = move_and_slide(velocity, Vector3(0, 1, 0))
 
-	if Input.is_action_just_pressed("jump"):
+	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		velocity.y = jump_height
 
 func fly(delta):
@@ -110,3 +107,13 @@ func fly(delta):
 
 	# move
 	move_and_slide(velocity)
+
+func aim():
+	if camera_change.length() > 0:
+		$Head.rotate_y(deg2rad(-camera_change.x * mouse_sensitivity))
+		
+		var change = -camera_change.y * mouse_sensitivity
+		if change + camera_angle < 90 and change + camera_angle > -90:
+			$Head/Camera.rotate_x(deg2rad(change))
+			camera_angle += change
+		camera_change = Vector2()
