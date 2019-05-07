@@ -82,6 +82,9 @@ func walk(delta):
 	# move
 	velocity = move_and_slide(velocity, Vector3(0, 1, 0))
 
+	if Input.is_action_just_pressed("jump"):
+		velocity.y = jump_height
+
 func fly(delta):
 	# Set the direction of the player
 	direction = Vector3()
