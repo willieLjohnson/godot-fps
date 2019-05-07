@@ -24,6 +24,9 @@ var jump_height = 15
 var in_air = 0
 var has_contact = false
 
+# Slope variables
+const MAX_SLOPE_ANGLE = 35
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -53,19 +56,22 @@ func walk(delta):
 		direction -= aim.x
 	if Input.is_action_pressed("move_right"):
 		direction += aim.x
-
+	direction.y = 0
 	direction = direction.normalized()
 
 	if (is_on_floor()):
 		has_contact = true
+		var n = $Tail.get_collision_normal()
+		var floor_angle = rad2deg(acos(n.dot(Vector3(0, 1, 0))))
+		if floor_angle > MAX_SLOPE_ANGLE:
+			velocity.y += gravity * delta
 	else:
 		if !$Tail.is_colliding():
 			has_contact = false
+		velocity.y += gravity * delta
 
 	if (has_contact and !is_on_floor()):
 		move_and_collide(Vector3(0, -1, 0))
-
-	velocity.y += gravity * delta
 
 	var temp_velocity = velocity
 	temp_velocity.y = 0
@@ -98,7 +104,7 @@ func walk(delta):
 	# move
 	velocity = move_and_slide(velocity, Vector3(0, 1, 0))
 
-	if !is_on_floor():
+	if !has_contact:
 		print(in_air)
 		in_air += 1
 

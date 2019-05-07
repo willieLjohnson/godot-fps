@@ -208,7 +208,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -61.4058, 12.029, -27.1096 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -106.217, 12.029, -27.1096 )
 
 [node name="Gary" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.04316, 2.3647, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.04316, 4.77565, 0 )
 script = ExtResource( 10 )
 
 [node name="Capsule" type="CollisionShape" parent="Gary"]
@@ -222,7 +222,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0 )
 far = 200.0
 
 [node name="Tail" type="RayCast" parent="Gary"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.89864, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.19238, 0 )
 enabled = true
 [connection signal="body_entered" from="Ladder/Area" to="Gary" method="_on_Area_body_entered"]
 [connection signal="body_exited" from="Ladder/Area" to="Gary" method="_on_Area_body_exited"]
