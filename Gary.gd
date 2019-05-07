@@ -27,6 +27,10 @@ var has_contact = false
 # Slope variables
 const MAX_SLOPE_ANGLE = 35
 
+# Stair variables
+const MAX_STAIR_SLOPE = 20
+const STAIR_JUMP_HEIGHT = 6
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -73,6 +77,13 @@ func walk(delta):
 	if (has_contact and !is_on_floor()):
 		move_and_collide(Vector3(0, -1, 0))
 
+	if (direction.length() > 0 and $StairCatcher.is_colliding()):
+		var stair_normal = $StairCatcher.get_collision_normal()
+		var stair_angle = rad2deg(acos(stair_normal.dot(Vector3(0, 1, 0))))
+		if stair_angle< MAX_STAIR_SLOPE:
+			velocity.y = STAIR_JUMP_HEIGHT
+			has_contact = false
+
 	var temp_velocity = velocity
 	temp_velocity.y = 0
 
@@ -107,6 +118,9 @@ func walk(delta):
 	if !has_contact:
 		print(in_air)
 		in_air += 1
+
+	$StairCatcher.translation.x = direction.x
+	$StairCatcher.translation.z = direction.z
 
 func fly(delta):
 	# Set the direction of the player
