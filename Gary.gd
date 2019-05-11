@@ -7,6 +7,8 @@ var camera_change = Vector2()
 var velocity = Vector3()
 var direction = Vector3()
 
+var anim_player
+
 # Fly variables
 const FLY_SPEED = 18
 const FLY_ACCEL = 4
@@ -43,7 +45,8 @@ var shooting = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	camera_width_center = OS.get_window_size().x / 2
-	camera_height_center = OS.get_window_size().y /2
+	camera_height_center = OS.get_window_size().y / 2
+	anim_player = $Head/Camera/Hands/AnimationPlayer
 
 func _physics_process(delta):
 	aim()
@@ -53,6 +56,10 @@ func _physics_process(delta):
 		walk(delta)
 	
 	if shooting > 0:
+		var anim_to_play = "Shoot"
+		anim_player.stop()
+		anim_player.play(anim_to_play)
+			
 		var space_state = get_world().direct_space_state
 		var result = space_state.intersect_ray(shoot_origin, shoot_normal, [self], 1)
 		var impulse
@@ -77,7 +84,7 @@ func _input(event):
 		if event.button_index == 1:
 			shooting = 1
 		if event.button_index == 2:
-			shooting =2
+			shooting = 2
 
 func walk(delta):
 	# Set the direction of the player
